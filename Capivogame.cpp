@@ -34,17 +34,36 @@ int main() {
    sf::RectangleShape quad(sf::Vector2f(30, 30));
    quad.setFillColor(sf::Color(190, 0, 255));
 
-   // sprites da capivara
-   sf::Texture texturaCapivaraSaltando;
+   // sprites das capivaras
+   sf::Texture texturaCapivaraSaltando;                                      //capivara saltando (durante corrida)
    if (!texturaCapivaraSaltando.loadFromFile("capivaraCorrendo.png")){
      std::cout << "Erro lendo imagem capivaraCorrendo.png\n";
      return 0;
    }
    sf::Sprite spriteCapivara;
    spriteCapivara.setTexture(texturaCapivaraSaltando);
+   
+    sf:: Texture texturaCapivaraInicial;                                      //capivara antes do primeiro movimento
+   if (!texturaCapivaraInicial.loadFromFile("capivaraDeitada.png")){
+   std::cout << "Erro lendo imagem capivaraDeitada.png\n";
+   return 0;
+   }
+   sf::Sprite spriteCapivaraInicial;
+   spriteCapivaraInicial.setTexture(texturaCapivaraInicial);
+   
+   
+   sf:: Texture texturaCapivaraIntermediaria;                                    //capivara na fase intermediária da corrida
+   if (!texturaCapivaraIntermediaria.loadFromFile("capivaraIntemediario.png")){
+   std::cout << "Erro lendo imagem capivaraIntermediario.png\n";
+   return 0;
+   }
+   sf::Sprite spriteCapivaraIntermediaria;
+   spriteCapivaraIntermediaria.setTexture(texturaCapivaraIntermediaria);
+   
 
-	  // sprites do carrapato
-   sf::Texture texturaCarrapato;
+    // sprites dos carrapatos
+    
+   sf::Texture texturaCarrapato;                                //natural
    if (!texturaCarrapato.loadFromFile("carrapato.png"))
 	{
      std::cout << "Erro lendo imagem carrapato.png\n";
@@ -52,26 +71,37 @@ int main() {
    }
    sf::Sprite spriteCarrapato;
    spriteCarrapato.setTexture(texturaCarrapato);
+   
+   sf::Texture texturaCarrapatoRed;                               //red
+   if (!texturaCarrapatoRed.loadFromFile("carrapatoVermelho.png"))
+	{
+     std::cout << "Erro lendo imagem carrapato.png\n";
+     return 0;
+   }
+   sf::Sprite spriteCarrapatoRed;            
+   spriteCarrapatoRed.setTexture(texturaCarrapatoRed);
+   
+   sf::Texture texturaCarrapatoBlue;                              //blue
+   if (!texturaCarrapatoBlue.loadFromFile("carrapatoAzul.png"))
+	{
+     std::cout << "Erro lendo imagem carrapato.png\n";
+     return 0;
+   }
+   sf::Sprite spriteCarrapatoBlue;
+   spriteCarrapatoBlue.setTexture(texturaCarrapatoBlue);
+   
+   sf::Texture texturaCarrapatoYellow;                            //yellow
+   if (!texturaCarrapatoYellow.loadFromFile("carrapatoAmarelo.png"))
+	{
+     std::cout << "Erro lendo imagem carrapato.png\n";
+     return 0;
+   }
+   sf::Sprite spriteCarrapatoYellow;
+   spriteCarrapatoYellow.setTexture(texturaCarrapatoYellow);
 
-   sf:: Texture texturaCapivaraInicial;
-   if (!texturaCapivaraInicial.loadFromFile("capivaraDeitada.png")){
-   std::cout << "Erro lendo imagem capivaraDeitada.png\n";
-   return 0;
-   }
-   //sprite capivara começo do jogo
-   sf::Sprite spriteCapivaraInicial;
-   spriteCapivaraInicial.setTexture(texturaCapivaraInicial);
-   
-   //capivara na fase intermediária da corrida
-   sf:: Texture texturaCapivaraIntermediaria;
-   if (!texturaCapivaraIntermediaria.loadFromFile("capivaraIntemediario.png")){
-   std::cout << "Erro lendo imagem capivaraIntermediario.png\n";
-   return 0;
-   }
-   //sprite capivara começo do jogo
-   sf::Sprite spriteCapivaraIntermediaria;
-   spriteCapivaraIntermediaria.setTexture(texturaCapivaraIntermediaria);
-   
+
+
+  
    
 	sf::Clock clock;
 
@@ -158,8 +188,18 @@ int main() {
 	   //spriteCapivaraIntermediaria.setPosition(posx*30,posy*30);
       //window.draw(spriteCapivaraIntermediaria);
 	   }
-	   spriteCarrapato.setPosition(8*30,8*30);
-		window.draw(spriteCarrapato);
+	   spriteCarrapato.setPosition(9*30,10*30);                           //posição carrapato natural
+		window.draw(spriteCarrapato);                                     //imprimir carrapato nessa posição
+		
+		spriteCarrapatoRed.setPosition(10*30,10*30);                        //posição carrapato red
+		window.draw(spriteCarrapatoRed);
+		
+		spriteCarrapatoBlue.setPosition(9*30,12*30);                       //posição carrapato blue
+		window.draw(spriteCarrapatoBlue);
+		
+		spriteCarrapatoYellow.setPosition(10*30,12*30);                       //posição carrapato blue
+		window.draw(spriteCarrapatoYellow);
+
 
       // termina e desenha o frame corrente
       window.display();
