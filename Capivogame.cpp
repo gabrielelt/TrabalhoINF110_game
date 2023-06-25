@@ -20,8 +20,10 @@ char mapa[17][23] = {    // Mapa do jogo
 "0000000000000000000", 
 "1111111111111111111" 
 };
-char frutas[17][23];
 
+char gramas[17][23];
+int cont;
+double velocidade = 0.1;
 int posVetorY = 9;
 int posVetorX = 8;
 double posx = 9.0;                                                                  // posicao da capivara
@@ -39,8 +41,11 @@ int main() {
    
    //sprint das gramas   
    for (int i =0; i < 17; i++)
-      for (int j = 0; j < 23; j ++)
-         frutas [i][j] = mapa [i][j];
+      for (int j = 0; j < 23; j ++){
+         gramas[i][j] = mapa [i][j];
+         if (gramas[i][j] == '0')
+            cont++;
+      }
    
    sf::Texture grama;                                      //capivara saltando (durante corrida)
    if (!grama.loadFromFile("grama.png")){
@@ -165,29 +170,49 @@ int main() {
             capivaraIntermediaria == true;
          }
 		}
-      if (clock.getElapsedTime() > sf::seconds(0.1)) // tempo desde último restart > 0.05s (velocidade inicial do jogo)
+      if (clock.getElapsedTime() > sf::seconds(0.05)) // tempo desde último restart > 0.05s (velocidade inicial do jogo)
 		{ 
          clock.restart();      // recomeça contagem do tempo
          bool cima= true, baixo = true, esquerda = true, direita = true;
-         if (up && mapa[posVetorY-1][posVetorX] != '1' && cima){                              //verifica se o pŕoximo passo será uma das paredes do mapa
+         if (up && mapa[posVetorY-1][posVetorX] != '1' && cima){                                       //verifica se o pŕoximo passo será uma das paredes do mapa
             posy -= 0.25;
             if (posVetorY - posy > 0.99 + 0.25 && esquerda && direita) posVetorY --;
             if (posVetorY - posy > 0.5 + 0.25  && mapa[posVetorY-2][posVetorX] == '1') cima = false;
-                        
+            if (gramas[posVetorY][posVetorX] == '0'){
+               gramas[posVetorY][posVetorX] = 1;
+               cont--;
+           }                                                         //verifica as gramas comidas e as retira do mapa           
          }if (down && mapa[posVetorY+1][posVetorX] != '1'){
 				posy += 0.25;                 // muda a posição de acordo com booleano ativo
             if (posy - posVetorY > 0.99 - 0.25 && esquerda && direita)  posVetorY++;
             if (posy - posVetorY > 0.5 - 0.25 && mapa[posVetorY+2][posVetorX] == '1') baixo = false;
+            if (gramas[posVetorY][posVetorX] == '0'){
+               gramas[posVetorY][posVetorX] = 1;
+               cont--;
+           }                
          }if (left && mapa[posVetorY][posVetorX - 1] != '1'){ 
 				posx -= 0.25;
 				if (posVetorX - posx > 0.99 + 0.25 && cima && baixo) posVetorX--;
             if (posVetorX - posx > 0.5 + 0.25 && mapa[posVetorY][posVetorX - 1] == '1') esquerda == false;
+			   if (gramas[posVetorY][posVetorX] == '0'){
+               gramas[posVetorY][posVetorX] = 1;
+               cont--;
+               
+           }                                                
 			}if (right && mapa[posVetorY][posVetorX + 1] != '1'){ 
 				posx += 0.25;
 				if (posx - posVetorX > 0.99 - 0.25 && cima && baixo) posVetorX++;
 				if (posx - posVetorX > 0.6 - 0.25 && mapa[posVetorY][posVetorX + 1] == '1') direita == false;
+			   if (gramas[posVetorY][posVetorX] == '0'){
+               gramas[posVetorY][posVetorX] = 1;
+               cont--;
+           }                
 			}
       }
+         if (cont == 0) window.close();
+         std::cout << cont << std:: endl;
+    
+         //velocidade -= 0.05; 
       // limpa a janela com a cor preta
       window.clear(sf::Color::Black);
 
@@ -207,7 +232,7 @@ int main() {
 		}
 		for (int i =0; i < 17; i++)
          for (int j = 0; j < 23; j ++)
-            if (frutas[i][j] == '0'){
+            if (gramas[i][j] == '0'){
                spriteGrama.setPosition(j*30, i*30);
                window.draw(spriteGrama);
             }
