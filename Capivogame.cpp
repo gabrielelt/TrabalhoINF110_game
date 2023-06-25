@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include<cstring>
 
 char mapa[17][23] = {    // Mapa do jogo
 "1111111111111111111", 
@@ -19,12 +20,14 @@ char mapa[17][23] = {    // Mapa do jogo
 "0000000000000000000", 
 "1111111111111111111" 
 };
+char frutas[17][23];
 
-float posx = 9;                                                                  // posicao da capivara
-float posy = 8;                                                                           
+int posVetorY = 9;
+int posVetorX = 8;
+double posx = 9.0;                                                                  // posicao da capivara
+double posy = 8.0;                                                                           
 bool right = false, left = false, down = false, up = false, iniciar = true;
 bool capivaraSaltando = false, capivaraIntermediaria = false;                                     //posições de corrida da capivara
-
 
 int main() {
    // cria a janela
@@ -33,6 +36,21 @@ int main() {
    // shape da parede
    sf::RectangleShape quad(sf::Vector2f(30, 30));
    quad.setFillColor(sf::Color(190, 0, 255));
+   
+   //sprint das gramas   
+   for (int i =0; i < 17; i++)
+      for (int j = 0; j < 23; j ++)
+         frutas [i][j] = mapa [i][j];
+   
+   sf::Texture grama;                                      //capivara saltando (durante corrida)
+   if (!grama.loadFromFile("grama.png")){
+     std::cout << "Erro lendo imagem capivaraCorrendo.png\n";
+     return 0;
+   }
+   sf::Sprite spriteGrama;
+   spriteGrama.setTexture(grama);
+
+
 
    // sprites das capivaras
    sf::Texture texturaCapivaraSaltando;                                      //capivara saltando (durante corrida)
@@ -147,17 +165,28 @@ int main() {
             capivaraIntermediaria == true;
          }
 		}
-      if (clock.getElapsedTime() > sf::seconds(0.05)) // tempo desde último restart > 0.05s (velocidade inicial do jogo)
+      if (clock.getElapsedTime() > sf::seconds(0.1)) // tempo desde último restart > 0.05s (velocidade inicial do jogo)
 		{ 
          clock.restart();      // recomeça contagem do tempo
-         if (up && mapa[(int)(posy-0.05)][(int)posx] != true)
-				posy -= 0.05;     // muda a posição de acordo com booleano ativo
-         if (down && mapa[(int)(posy+0.05)][(int)posx] != true)
-				posy += 0.05;
-         if (left && mapa[(int)posy][(int)(posx-0.05)] != true) 
-				posx -= 0.05;
-         if (right && mapa[(int)posy][(int)(posx+0.05)] != true) 
-				posx += 0.05;
+         bool cima= true, baixo = true, esquerda = true, direita = true;
+         if (up && mapa[posVetorY-1][posVetorX] != '1' && cima){                              //verifica se o pŕoximo passo será uma das paredes do mapa
+            posy -= 0.25;
+            if (posVetorY - posy > 0.99 + 0.25 && esquerda && direita) posVetorY --;
+            if (posVetorY - posy > 0.5 + 0.25  && mapa[posVetorY-2][posVetorX] == '1') cima = false;
+                        
+         }if (down && mapa[posVetorY+1][posVetorX] != '1'){
+				posy += 0.25;                 // muda a posição de acordo com booleano ativo
+            if (posy - posVetorY > 0.99 - 0.25 && esquerda && direita)  posVetorY++;
+            if (posy - posVetorY > 0.5 - 0.25 && mapa[posVetorY+2][posVetorX] == '1') baixo = false;
+         }if (left && mapa[posVetorY][posVetorX - 1] != '1'){ 
+				posx -= 0.25;
+				if (posVetorX - posx > 0.99 + 0.25 && cima && baixo) posVetorX--;
+            if (posVetorX - posx > 0.5 + 0.25 && mapa[posVetorY][posVetorX - 1] == '1') esquerda == false;
+			}if (right && mapa[posVetorY][posVetorX + 1] != '1'){ 
+				posx += 0.25;
+				if (posx - posVetorX > 0.99 - 0.25 && cima && baixo) posVetorX++;
+				if (posx - posVetorX > 0.6 - 0.25 && mapa[posVetorY][posVetorX + 1] == '1') direita == false;
+			}
       }
       // limpa a janela com a cor preta
       window.clear(sf::Color::Black);
@@ -176,9 +205,15 @@ int main() {
             }
 			}
 		}
+		for (int i =0; i < 17; i++)
+         for (int j = 0; j < 23; j ++)
+            if (frutas[i][j] == '0'){
+               spriteGrama.setPosition(j*30, i*30);
+               window.draw(spriteGrama);
+            }
 
       // desenha a capivara e o carrapato
-      if(left== 0 && right== 0 && up==0 && down==0){
+      if(left== 0 && right == 0 && up==0 && down==0){
       spriteCapivaraInicial.setPosition(posx*30,posy*30);
       window.draw(spriteCapivaraInicial);
       }else{
