@@ -21,6 +21,11 @@ char mapa[17][23] = {    // Mapa do jogo
 "1111111111111111111" 
 };
 
+int posxCarrapatoNatural = 9, posyCarrapatoNatural = 10;
+int posxCarrapatoVermelho = 10, posyCarrapatoVermelho = 10;
+int posxCarrapatoAzul = 9, posyCarrapatoAzul = 12;
+int posxCarrapatoAmarelo = 10, posyCarrapatoAmarelo = 12; 
+
 char gramas[17][23];
 int cont;
 double velocidade = 0.1;
@@ -176,24 +181,24 @@ int main() {
          bool cima= true, baixo = true, esquerda = true, direita = true;
          if (up && mapa[posVetorY-1][posVetorX] != '1' && cima){                                       //verifica se o pŕoximo passo será uma das paredes do mapa
             posy -= 0.25;
-            if (posVetorY - posy > 0.99 + 0.25 && esquerda && direita) posVetorY --;
-            if (posVetorY - posy > 0.5 + 0.25  && mapa[posVetorY-2][posVetorX] == '1') cima = false;
-            if (gramas[posVetorY][posVetorX] == '0'){
+            if (posVetorY - posy > 0.99 && esquerda && direita) posVetorY --;
+            if (posVetorY - posy > 0.5  && mapa[posVetorY-2][posVetorX] == '1') cima = false;
+            if (gramas[posVetorY][posVetorX] == '0'){                                                 //verifica as gramas comidas e as retira do mapa
                gramas[posVetorY][posVetorX] = 1;
                cont--;
-           }                                                         //verifica as gramas comidas e as retira do mapa           
+           }                                                                                 
          }if (down && mapa[posVetorY+1][posVetorX] != '1'){
 				posy += 0.25;                 // muda a posição de acordo com booleano ativo
-            if (posy - posVetorY > 0.99 - 0.25 && esquerda && direita)  posVetorY++;
-            if (posy - posVetorY > 0.5 - 0.25 && mapa[posVetorY+2][posVetorX] == '1') baixo = false;
+            if (posy - posVetorY > 0.99 && esquerda && direita)  posVetorY++;
+            if (posy - posVetorY > 0.5 && mapa[posVetorY+2][posVetorX] == '1') baixo = false;
             if (gramas[posVetorY][posVetorX] == '0'){
                gramas[posVetorY][posVetorX] = 1;
                cont--;
            }                
          }if (left && mapa[posVetorY][posVetorX - 1] != '1'){ 
 				posx -= 0.25;
-				if (posVetorX - posx > 0.99 + 0.25 && cima && baixo) posVetorX--;
-            if (posVetorX - posx > 0.5 + 0.25 && mapa[posVetorY][posVetorX - 1] == '1') esquerda == false;
+				if (posVetorX - posx > 0.99 && cima && baixo) posVetorX--;
+            if (posVetorX - posx > 0.5 && mapa[posVetorY][posVetorX - 1] == '1') esquerda == false;
 			   if (gramas[posVetorY][posVetorX] == '0'){
                gramas[posVetorY][posVetorX] = 1;
                cont--;
@@ -201,14 +206,15 @@ int main() {
            }                                                
 			}if (right && mapa[posVetorY][posVetorX + 1] != '1'){ 
 				posx += 0.25;
-				if (posx - posVetorX > 0.99 - 0.25 && cima && baixo) posVetorX++;
-				if (posx - posVetorX > 0.6 - 0.25 && mapa[posVetorY][posVetorX + 1] == '1') direita == false;
+				if (posx - posVetorX > 0.99 && cima && baixo) posVetorX++;
+				if (posx - posVetorX > 0.5 && mapa[posVetorY][posVetorX + 1] == '1') direita == false;
 			   if (gramas[posVetorY][posVetorX] == '0'){
                gramas[posVetorY][posVetorX] = 1;
                cont--;
            }                
 			}
       }
+         std::cout << posx << " " << posVetorX << " " << posy << " " << posVetorY << std::endl;
          if (cont == 0) window.close();
          std::cout << cont << std:: endl;
     
@@ -248,16 +254,16 @@ int main() {
 	   //spriteCapivaraIntermediaria.setPosition(posx*30,posy*30);
       //window.draw(spriteCapivaraIntermediaria);
 	   }
-	   spriteCarrapato.setPosition(9*30,10*30);                           //posição carrapato natural
+	   spriteCarrapato.setPosition(posxCarrapatoNatural * 30,posyCarrapatoNatural*30);                           //posição carrapato natural
 		window.draw(spriteCarrapato);                                     //imprimir carrapato nessa posição
 		
-		spriteCarrapatoRed.setPosition(10*30,10*30);                        //posição carrapato red
+		spriteCarrapatoRed.setPosition (posxCarrapatoVermelho*30,posyCarrapatoVermelho*30);                        //posição carrapato red
 		window.draw(spriteCarrapatoRed);
 		
-		spriteCarrapatoBlue.setPosition(9*30,12*30);                       //posição carrapato blue
+		spriteCarrapatoBlue.setPosition  (posxCarrapatoAzul*30,posyCarrapatoAzul*30);                       //posição carrapato blue
 		window.draw(spriteCarrapatoBlue);
 		
-		spriteCarrapatoYellow.setPosition(10*30,12*30);                       //posição carrapato blue
+		spriteCarrapatoYellow.setPosition   (posxCarrapatoAmarelo*30,posyCarrapatoAmarelo*30);                       //posição carrapato blue
 		window.draw(spriteCarrapatoYellow);
 
 
